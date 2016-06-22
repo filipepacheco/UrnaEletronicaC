@@ -1,0 +1,221 @@
+<!--O trabalho consiste em um CRUD (Create, Read, Update e delete) de pontos de wi-fi e pode ser realizado em grupo de até 4 pessoas.
+
+Estes pontos de wi-fi receberão sua carga inicial via AJAX a partir da URL
+http://www.portoalegrelivre.com.br/php/services/WSPoaLivreRedes.php.
+
+Após este carregamento os dados poderão ser excluídos, alterados e incluídos novos pontos de wi-fi. Estes dados não precisam ser persistidos em um banco de dados.
+
+A página web pode ser construída divida em duas etapas.
+
+A primeira etapa exibe os campos que representam as propriedades de pontos de wi-fi. Todos os campos podem utilizar input com o type="text", com exceção do campo Setor que deve ser representado através de dois radios, um para o Setor Privado e outro Poder Público. Vale salientar que a propriedade "setor" só aceita os valores "Poder Público" ou "Rede Privada".
+
+A segunda etapa deve apresentar uma tabela que exibe todos os pontos de wi-fi, cada ponto de wi-fi deve permitir o usuário editar, carregando os dados para os campos criados na primeira etapa, e excluir.
+
+Os pontos wi-fi devem ser representados através de uma classe prototipada.
+
+Serão avaliados os seguintes ítens:
+1) A forma de uso dos eventos;
+2) Uso de Orientação a Objetos;
+3) Interação com os objetos;
+4) Uso de variáveis;
+5) E se todas as regras estabelecidas no trabalho foram seguidas.
+
+Pontuação do trabalho:
+1) O trabalho vale 2,00 pontos.
+2) Vale 0,75 pontos extras para quem utilizar o padrão MVC (Model, View, Controller) de maneira correta.
+3) Vale 0,75 pontos extras para quem utilizar jquery para criar os elementos e criar os vínculos de eventos aos elementos.
+
+Vale salientar que vocês podem conquistar 3,5 pontos somente neste trabalho. 
+Boa sorte, utilize o google translator se necessário e nunca desista.
+
+Link para formatar json:
+- https://jsonformatter.curiousconcept.com/
+Link para retornar os pontos de wi-fi:
+- http://www.portoalegrelivre.com.br/php/services/WSPoaLivreRedes.php
+Link de dados abertos de porto alegre:
+- http://datapoa.com.br/dataset?res_format=JSON&page=2-->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style>
+			table {
+				text-align: center;
+				border: 1px solid black;
+			}
+			td {
+				max-width: 250px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="output"></div>
+		<div id="form">
+			<table>
+				<thead>
+					<tr>
+						<th>FORMULÁRIO</th>
+					</tr>
+				</thead>
+				<tbody>
+					<form>
+						<tr>
+							<td>
+								<label for="Empresa">Empresa:</label>
+								<input type="text" name="Empresa">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Site">Site:</label>
+								<input type="text" name="Site">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Logomarca">Logomarca:</label>
+								<input type="text" name="Logomarca">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="NomeRede">Nome da Rede:</label>
+								<input type="text" name="NomeRede">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Endereco">Endereço:</label>
+								<input type="text" name="Endereco">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Longitude">Longitude:</label>
+								<input type="text" name="Longitude">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Latitude">Latitude:</label>
+								<input type="text" name="Latitude">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="Setor">Setor:</label><br>
+								<input type="radio" name="Setor" value="publico"> Público<br>
+								<input type="radio" name="Setor" value="privado"> Privado<br>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<button type="button" onclick="criarTabela()">Enviar</button>
+							</td>
+						</tr>
+					</form>
+				</tbody>
+			</table>
+		</div>
+		<hr>
+		<table id="tableOutput">
+			<thead>
+				<th>Empresa</th>
+				<th>Site</th>
+				<th>Logomarca</th>
+				<th>Nome da Rede</th>
+				<th>Endereço</th>
+				<th>Longitude</th>
+				<th>Latitude</th>
+				<th>Setor</th>
+				<th></th>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+		<script type="text/javascript">
+		var xhttp;
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+			xhttp = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 8 and older
+			xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		xhttp.open("GET", "http://www.portoalegrelivre.com.br/php/services/WSPoaLivreRedes.php", true);
+		xhttp.send();
+
+		xhttp.onreadystatechange = function(){
+			if (xhttp.readyState == 4 && xhttp.status == 200) {
+			    var myArr = JSON.parse(xhttp.responseText);
+			    criarTabela(myArr);
+			}
+		}
+		function myFunction(arr) {
+		    var out = "";
+		    var i;
+		    for(i = 0; i < arr.length; i++) {
+		        out += 'Empresa: ' + arr[i].Empresa + '<br>';
+		    }
+		    document.getElementById("output").innerHTML = out;
+		}
+
+		function criarTabela(arr){
+			var tabelaId = document.getElementById("tableOutput");
+			var oTr, oTd;
+			var i=0;
+
+			do{
+            oTr = document.createElement("tr"); /* Cria linha (TR) */
+
+            oTd = document.createElement("td"); /* Cria Célula (TD) */
+            oTd.innerText = arr[i].Empresa; /* Altera o conteúdo no innerText da TD */
+            oTr.appendChild(oTd); /* Insere a TD (célula) na TR (linha) */
+
+            oTd = document.createElement("td");
+            oTd.innerText = arr[i].Site;
+            oTr.appendChild(oTd);
+
+            oTd = document.createElement("td");
+            oTd.innerText = arr[i].Logomarca;
+            oTr.appendChild(oTd);
+            
+            oTd = document.createElement("td");
+            oTd.innerText = arr[i].NomeRede;
+            oTr.appendChild(oTd);
+
+            oTd = document.createElement("td");
+            oTd.innerText = arr[i].Endereco;
+            oTr.appendChild(oTd);
+
+            oTd = document.createElement("td");
+            oTd.innerText = arr[i].Longitude;
+            oTr.appendChild(oTd);
+
+            oTd = document.createElement("td");
+            oTd.innerText = arr[i].Latitude;
+            oTr.appendChild(oTd);
+
+            oTd = document.createElement("td");
+            oTd.innerText = arr[i].Setor;
+            oTr.appendChild(oTd);
+
+            oTd = document.createElement("td");
+            oTd.innerHTML = "<button>Editar</button><button>Excluir</button>"
+            oTr.appendChild(oTd);
+
+            tabelaId.appendChild(oTr);
+            i++
+        	}while (i<arr.length);
+		}
+
+
+		function addEvent(elemento, evento, funcao) {
+		    if (elemento.addEventListener) {
+		        elemento.addEventListener(evento, funcao, false);
+		    } else {
+		        elemento.attachEvent("on" + evento, function() {
+		            return(funcao.call(elemento, window.event));   
+		        });
+		    }
+		}
+		</script>
+	</body>
+</html>
